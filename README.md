@@ -26,6 +26,10 @@ The ribbon icon (a notebook and pen) shows or hides the panel and the map togeth
 - **Detail:** specifics (where concrete detail lives), stock body language, personified abstractions, filter words.
 - **Stats:** word, sentence and paragraph counts, reading grade, Gunning Fog, vocabulary diversity, sentence and paragraph variation, and more.
 
+## Command line
+
+`node cli.cjs <file> [--mode=essay|story|auto]` prints the same analysis as a markdown report: hard rules (em dashes, semicolons), numbers outside your usual range, and signals above your usual rate with line-numbered examples. It needs `main.js` and your `profile-*.json` files beside it. No network, no AI.
+
 ## Install
 
 **With BRAT:** add `douglangille/blue-pencil-marginalia` as a beta plugin.
