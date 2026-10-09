@@ -611,7 +611,8 @@ const ITEMS = [
 ];
 
 const LABEL = {};
-for (const [, rows] of ITEMS) for (const [cls, label] of rows) LABEL[cls] = label;
+const HELP = {};
+for (const [, rows] of ITEMS) for (const [cls, label, , help] of rows) { LABEL[cls] = label; HELP[cls] = help; }
 const SYNTAX = /^sl-(noun|verb|adj|adv|conj)$/;
 
 // What covers the caret or selection: flags, sentence, paragraph.
@@ -789,7 +790,7 @@ class LensView extends ItemView {
     }
     this.profRows = {};
     for (const [kind, label] of [["essay", "Essay"], ["story", "Story"]]) {
-      this.profRows[kind] = new Setting(page).setName(label + " samples folder")
+      this.profRows[kind] = new Setting(page).setName(label + " samples folder").setClass("sl-folder")
         .addText((t) => t.setPlaceholder("folder/in/vault").setValue(this.plugin.opts.folders[kind] || "")
           .onChange((v) => { this.plugin.opts.folders[kind] = v.trim(); this.plugin.saveData(this.plugin.opts); }))
         .addButton((b) => b.setButtonText("Rebuild").onClick(() => this.plugin.buildProfile(kind)));
@@ -958,14 +959,22 @@ class LensView extends ItemView {
   counts(a) {
     for (const [cls, st] of this.rows) {
       if (SYNTAX.test(cls)) continue;
-      if (!a) { st.setDesc(""); continue; }
-      let text = `${a.counts[cls] || 0} hits, in ${a.paraHits[cls] || 0} of ${a.stats.paragraphs} paragraphs`;
+      if (!a) { st.setDesc(""); st.settingEl.title = HELP[cls]; continue; }
+      const main = `${a.counts[cls] || 0} hits, in ${a.paraHits[cls] || 0} of ${a.stats.paragraphs} paragraphs`;
       const w = a.stats.words;
+      let more = "", mark = "";
       if (w >= 200) {
         const rate = ((a.counts[cls] || 0) * 1000) / w, u = this.usual("rate:" + cls, rate, 1);
-        if (u) text += ` \u00b7 ${fmt(rate, 1)} per 1,000 words, usual ${u.txt}`;
+        if (u) { more = `${fmt(rate, 1)} per 1,000 words, usual ${u.rng}`; mark = u.mark; }
       }
-      st.setDesc(text);
+      // The rate and range are secondary: they hide at narrow widths and stay in the row's hover text.
+      const desc = typeof createFragment === "function" ? createFragment((f) => {
+        f.createSpan({ text: main });
+        if (more) f.createSpan({ text: " \u00b7 " + more, cls: "sl-d2" });
+        if (mark) f.createSpan({ text: " " + mark, cls: "sl-mark" });
+      }) : main + (more ? " \u00b7 " + more : "") + (mark ? " " + mark : "");
+      st.setDesc(desc);
+      st.settingEl.title = HELP[cls] + (more ? "\n" + more : "");
     }
   }
 }

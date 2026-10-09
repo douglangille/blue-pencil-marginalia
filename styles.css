@@ -144,3 +144,12 @@ ol.sl-help, ul.sl-help { padding-left: 1.3em; }
   .sl-stats td.sl-k { flex: 1 0 100%; }
   .sl-stats td.sl-v { text-align: left; }
 }
+
+/* Narrow sidebar, continued. */
+.sl-panel .setting-item-control input[type="color"] { flex: 0 0 auto; width: 2.4em; }
+@container (max-width: 300px) {
+  .sl-d2 { display: none; }
+  .sl-panel .sl-tab { padding: 3px 5px; font-size: var(--font-ui-smaller); }
+  .sl-folder .setting-item-control { flex-direction: column; align-items: stretch; width: 100%; }
+  .sl-folder .setting-item-control input[type="text"] { width: 100%; }
+}
