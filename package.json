@@ -1,6 +1,6 @@
 {
   "name": "blue-pencil-marginalia",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "description": "Mechanical writing signals beside your text, for Obsidian.",
   "scripts": { "build": "sh build.sh", "test": "node test/run.cjs" },
