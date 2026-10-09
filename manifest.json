@@ -1,6 +1,6 @@
 {
-  "id": "marginalia",
-  "name": "Marginalia",
+  "id": "blue-pencil-marginalia",
+  "name": "Blue Pencil Marginalia",
   "version": "0.9.0",
   "minAppVersion": "1.5.0",
   "description": "Marks parts of speech and mechanical writing signals beside your text. Offline, no inference, never rewrites.",

@@ -1,4 +1,4 @@
-# Marginalia
+# Blue Pencil Marginalia
 
 Marks parts of speech and mechanical writing signals beside your text in Obsidian, like notes in a margin. It never rewrites anything, makes no network calls, and uses no AI. Everything is word lists, patterns and counting.
 
@@ -10,10 +10,10 @@ A mark is a signal, not a verdict. One instance means little. A pattern that rep
 - **Map (right sidebar).** The whole note as small word bars, flagged words colored. Chips list what is flagged; click one to isolate it. Click anywhere to jump.
 - **At the cursor.** Click a word or sentence and the panel lists everything flagged there.
 - **Essay or Story.** Auto-detected from the note (past tense, pronouns, dialogue, reading level) or set by hand. Some checks only appear for one.
-- **Your usual range.** In Setup, point Marginalia at folders of your own finished essays and stories. It measures them once, then shows the open note against your usual range (▲ above, ▼ below).
+- **Your usual range.** In Setup, point it at folders of your own finished essays and stories. It measures them once, then shows the open note against your usual range (▲ above, ▼ below).
 - **Readable marks.** While anything is switched on, the editor gets a neutral dark or light background and every color is nudged to stay readable on it. Turn that off in Setup.
 
-The ribbon icon (notebook) shows or hides the panel and the map together. The Help tab explains each check with an example.
+The ribbon icon (a notebook and pen) shows or hides the panel and the map together. The Help tab explains each check with an example.
 
 ## The checks
 
@@ -28,11 +28,11 @@ The ribbon icon (notebook) shows or hides the panel and the map together. The He
 
 ## Install
 
-**With BRAT:** add `douglangille/marginalia` as a beta plugin.
+**With BRAT:** add `douglangille/blue-pencil-marginalia` as a beta plugin.
 
-**By hand:** download `main.js`, `manifest.json` and `styles.css` from the latest release into `<your vault>/.obsidian/plugins/marginalia/`, then enable Marginalia under Community plugins.
+**By hand:** download `main.js`, `manifest.json` and `styles.css` from the latest release into `<your vault>/.obsidian/plugins/blue-pencil-marginalia/`, then enable Blue Pencil Marginalia under Community plugins.
 
-**From source:** clone the repo into `<your vault>/.obsidian/plugins/marginalia/` (or symlink it there) and run `sh build.sh`.
+**From source:** clone the repo into `<your vault>/.obsidian/plugins/blue-pencil-marginalia/` (or symlink it there) and run `sh build.sh`.
 
 Desktop only for now. English only.
 
