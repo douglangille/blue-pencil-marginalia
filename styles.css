@@ -1,0 +1,128 @@
+/* Colors come from --sl-* variables the panel sets on <body>. */
+/* Syntax: colored text */
+.sl-noun { color: var(--sl-noun); }
+.sl-verb { color: var(--sl-verb); }
+.sl-adj  { color: var(--sl-adj); }
+.sl-adv  { color: var(--sl-adv); }
+.sl-conj { color: var(--sl-conj); }
+
+/* Word-level flags: lines under the word */
+.sl-filler  { box-shadow: inset 0 -2px 0 var(--sl-filler); }
+.sl-passive { box-shadow: inset 0 -2px 0 var(--sl-passive); }
+.sl-repeat  { box-shadow: inset 0 -2px 0 var(--sl-repeat); }
+.sl-hedge   { text-decoration: underline dotted var(--sl-hedge) 2px; text-underline-offset: 3px; }
+.sl-filter  { text-decoration: underline dashed var(--sl-filter) 2px; text-underline-offset: 3px; }
+.sl-punct   { background-color: color-mix(in srgb, var(--sl-punct) 45%, transparent); border-radius: 2px; }
+.sl-opener  { text-decoration: underline double var(--sl-opener); text-underline-offset: 3px; }
+.sl-which   { text-decoration: underline wavy var(--sl-which) 1px; text-underline-offset: 3px; }
+
+/* Phrase-level flags: wavy underline */
+.sl-negpar, .sl-triplet, .sl-closer, .sl-copdodge, .sl-throat, .sl-stock, .sl-road, .sl-concede, .sl-tail, .sl-wordy, .sl-tagfancy, .sl-tagadv, .sl-person { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.sl-negpar   { text-decoration-color: var(--sl-negpar); }
+.sl-triplet  { text-decoration-color: var(--sl-triplet); }
+.sl-closer   { text-decoration-color: var(--sl-closer); }
+.sl-copdodge { text-decoration-color: var(--sl-copdodge); }
+.sl-throat   { text-decoration-color: var(--sl-throat); }
+.sl-stock    { text-decoration-color: var(--sl-stock); }
+
+.sl-dialogue { background-color: color-mix(in srgb, var(--sl-dialogue) 16%, transparent); border-radius: 2px; }
+.sl-radar    { background-color: color-mix(in srgb, var(--sl-radar) 28%, transparent); border-radius: 2px; }
+.sl-vague    { text-decoration: underline solid var(--sl-vague) 1px; text-underline-offset: 3px; }
+.sl-misused  { text-decoration: underline wavy var(--sl-misused) 2px; text-underline-offset: 3px; }
+
+.sl-road     { text-decoration-color: var(--sl-road); }
+.sl-concede  { text-decoration-color: var(--sl-concede); }
+.sl-tail     { text-decoration-color: var(--sl-tail); }
+.sl-wordy    { text-decoration-color: var(--sl-wordy); }
+.sl-tagfancy { text-decoration-color: var(--sl-tagfancy); }
+.sl-tagadv   { text-decoration-color: var(--sl-tagadv); }
+.sl-person   { text-decoration-color: var(--sl-person); }
+.sl-simile   { text-decoration: underline dotted var(--sl-simile) 2px; text-underline-offset: 3px; }
+.sl-vnoun    { text-decoration: underline dotted var(--sl-vnoun) 2px; text-underline-offset: 3px; }
+.sl-paraopen { text-decoration: underline double var(--sl-paraopen); text-underline-offset: 3px; }
+.sl-nom      { background-color: color-mix(in srgb, var(--sl-nom) 18%, transparent); border-radius: 2px; }
+.sl-uncontr  { background-color: color-mix(in srgb, var(--sl-uncontr) 18%, transparent); border-radius: 2px; }
+.sl-stack    { background-color: color-mix(in srgb, var(--sl-stack) 22%, transparent); border-radius: 2px; }
+.sl-dlgsemi  { background-color: color-mix(in srgb, var(--sl-dlgsemi) 45%, transparent); border-radius: 2px; }
+.sl-spec     { background-color: color-mix(in srgb, var(--sl-spec) 22%, transparent); border-radius: 2px; }
+
+/* Rhythm flags: tint behind whole sentences or paragraphs */
+.sl-long   { background-color: color-mix(in srgb, var(--sl-long) 25%, transparent); border-radius: 2px; }
+.sl-vlong  { background-color: color-mix(in srgb, var(--sl-vlong) 25%, transparent); border-radius: 2px; }
+.sl-even   { background-color: color-mix(in srgb, var(--sl-even) 18%, transparent); border-radius: 2px; }
+.sl-zigzag { background-color: color-mix(in srgb, var(--sl-zigzag) 18%, transparent); border-radius: 2px; }
+.sl-stacc  { background-color: color-mix(in srgb, var(--sl-stacc) 20%, transparent); border-radius: 2px; }
+.sl-jump   { background-color: color-mix(in srgb, var(--sl-jump) 24%, transparent); border-radius: 2px; }
+.sl-rhetq  { background-color: color-mix(in srgb, var(--sl-rhetq) 14%, transparent); border-radius: 2px; }
+.sl-tagrun { background-color: color-mix(in srgb, var(--sl-tagrun) 30%, transparent); border-radius: 2px; }
+.sl-talk   { background-color: color-mix(in srgb, var(--sl-talk) 14%, transparent); border-radius: 2px; }
+.sl-metro  { background-color: color-mix(in srgb, var(--sl-metro) 18%, transparent); border-radius: 2px; }
+
+/* Panel */
+.sl-status { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.sl-tabs { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 8px; border-bottom: 1px solid var(--background-modifier-border); }
+.sl-hidden { display: none !important; }
+.sl-stats { width: 100%; border-collapse: collapse; font-size: var(--font-ui-small); }
+.sl-stats td { padding: 1px 4px 1px 0; }
+.sl-k { color: var(--text-muted); }
+.sl-cap { margin-top: 0.9em; color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.sl-strip { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1px; row-gap: 6px; margin-top: 4px; }
+.sl-cell { width: 4px; height: 44px; display: flex; align-items: flex-end; cursor: pointer; }
+.sl-cell.sl-gap { margin-left: 3px; }
+.sl-pcell { width: 8px; }
+.sl-bar { width: 100%; border-radius: 1px; background: var(--text-faint); }
+.sl-b-short { background: var(--text-faint); }
+.sl-b-mid   { background: var(--interactive-accent); }
+.sl-b-long  { background: #d4a017; }
+.sl-b-vlong { background: #c2544d; }
+.sl-h0 { background: var(--text-faint); }
+.sl-h1 { background: color-mix(in srgb, #d4a017 55%, var(--text-faint)); }
+.sl-h2 { background: #d4a017; }
+.sl-h3 { background: #e0913a; }
+.sl-h4 { background: #c2544d; }
+.sl-master { border-bottom: 1px solid var(--background-modifier-border); margin-bottom: 4px; }
+.sl-master .setting-item-name { font-weight: var(--font-semibold); }
+.sl-at { margin-top: 12px; padding-top: 6px; border-top: 1px solid var(--background-modifier-border); font-size: var(--font-ui-small); }
+.sl-at-row { display: flex; align-items: center; gap: 6px; padding: 1px 0; }
+.sl-at-off { color: var(--text-faint); }
+.sl-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.sl-mode { display: flex; gap: 0; margin-bottom: 8px; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-m); overflow: hidden; }
+.sl-usual { color: var(--text-faint); font-size: var(--font-ui-smaller); white-space: nowrap; padding-left: 6px; }
+.sl-usual.sl-hi { color: #e0913a; }
+.sl-usual.sl-lo { color: #4f9dde; }
+.sl-stats td:nth-child(2) { text-align: right; }
+.sl-stats td:last-child { text-align: right; }
+/* Prefixed with .sl-panel so these beat Obsidian's own button rules. */
+.sl-panel .sl-tab { background: transparent; box-shadow: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 4px 8px; height: auto; color: var(--text-muted); cursor: pointer; font-size: var(--font-ui-small); }
+.sl-panel .sl-tab:hover { color: var(--text-normal); background: transparent; }
+.sl-panel .sl-tab.sl-tab-on { color: var(--text-normal); border-bottom-color: var(--interactive-accent); font-weight: var(--font-semibold); }
+.sl-panel .sl-mode-btn { flex: 1; background: transparent; box-shadow: none; border: none; border-radius: 0; height: auto; padding: 4px 8px; color: var(--text-muted); cursor: pointer; font-size: var(--font-ui-small); }
+.sl-panel .sl-mode-btn.sl-mode-on { background: var(--interactive-accent); color: var(--text-on-accent); font-weight: var(--font-semibold); }
+.sl-modenote { margin: -4px 0 8px; }
+.sl-group { margin-top: 6px; }
+.sl-group > summary { cursor: pointer; color: var(--text-muted); font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; }
+
+/* Map */
+.sl-mapview { padding: 8px; }
+.sl-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.sl-chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border: 1px solid var(--background-modifier-border); border-radius: 999px; cursor: pointer; font-size: var(--font-ui-smaller); color: var(--text-muted); }
+.sl-chip-on { border-color: var(--interactive-accent); color: var(--text-normal); }
+.sl-chip-dim { opacity: 0.5; }
+.sl-mapwrap { position: relative; width: 100%; }
+.sl-map { display: block; cursor: pointer; }
+.sl-vp { position: absolute; left: 0; right: 0; pointer-events: none; background: color-mix(in srgb, var(--interactive-accent) 12%, transparent); border-top: 1px solid var(--interactive-accent); border-bottom: 1px solid var(--interactive-accent); display: none; }
+
+/* Neutral canvas while any mark is on, so the colors have something predictable to sit on. */
+body.marginalia-on .workspace-leaf-content[data-type="markdown"] .view-content,
+body.marginalia-on .markdown-source-view.mod-cm6,
+body.marginalia-on .markdown-source-view.mod-cm6 .cm-editor,
+body.marginalia-on .markdown-source-view.mod-cm6 .cm-scroller { background-color: var(--sl-canvas) !important; }
+body.marginalia-on .markdown-source-view.mod-cm6 .cm-content { color: var(--sl-ink) !important; caret-color: var(--sl-ink); }
+
+/* Help and header rows */
+.sl-helph { margin: 1.2em 0 0.3em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.sl-help { font-size: var(--font-ui-small); color: var(--text-normal); margin: 0 0 0.6em; }
+ol.sl-help, ul.sl-help { padding-left: 1.3em; }
+.sl-help li { margin-bottom: 0.35em; }
+.sl-head td { color: var(--text-faint); font-size: var(--font-ui-smaller); text-align: right; }
+.sl-maptitle { font-size: var(--font-ui-medium); font-weight: var(--font-semibold); color: var(--text-normal); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

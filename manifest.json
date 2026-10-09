@@ -1,0 +1,10 @@
+{
+  "id": "marginalia",
+  "name": "Marginalia",
+  "version": "0.9.0",
+  "minAppVersion": "1.5.0",
+  "description": "Marks parts of speech and mechanical writing signals beside your text. Offline, no inference, never rewrites.",
+  "author": "Doug Langille",
+  "authorUrl": "https://github.com/douglangille",
+  "isDesktopOnly": true
+}

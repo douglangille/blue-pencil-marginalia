@@ -1,0 +1,5 @@
+data.json
+profile-*.json
+error.log
+node_modules/
+.DS_Store
