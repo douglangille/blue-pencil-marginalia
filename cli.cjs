@@ -37,7 +37,7 @@ const ESSAY_ONLY = ["sl-throat", "sl-road", "sl-concede", "sl-nom", "sl-uncontr"
 const hidden = mode === "story" ? ESSAY_ONLY : STORY_ONLY;
 // Rule text for each class, read from the plugin's own list so the code stays the one doc.
 const LABEL = {};
-for (const mm of src.matchAll(/\["(sl-[a-z]+)", "((?:[^"\\]|\\.)*)"/g)) LABEL[mm[1]] = mm[2];
+for (const mm of src.matchAll(/\["(sl-[a-z]+)", "((?:[^"\\]|\\.)*)"/g)) LABEL[mm[1]] = mm[2].replace(/\\"/g, '"');
 
 const lineOf = (off) => text.slice(0, off).split("\n").length;
 const snip = (h) => {
@@ -61,7 +61,7 @@ const interesting = rows.filter((r) => r.u ? r.u.st === "hi" : r.n >= 3).sort((x
 if (args.includes("--json")) { console.log(JSON.stringify({ mode, words: W, stats: a.stats, counts: a.counts, paraHits: a.paraHits, emDashes: em, semicolons: semi, above: interesting.map((r) => r.cls) }, null, 1)); process.exit(0); }
 
 const out = [];
-out.push(`# Blue Pencil report: ${path.basename(file)}`, "", `${W} words, ${a.stats.sentences} sentences, ${a.stats.paragraphs} paragraphs. Mode: ${mode}${modeNote}.${prof ? ` Compared with your usual range (${prof.n} finished ${mode}s).` : " No profile found, so no comparison."}`, "");
+out.push(`# Blue Pencil report: ${path.basename(file)}`, "", `${W} words, ${a.stats.sentences} sentences, ${a.stats.paragraphs} paragraphs. Mode: ${mode}${modeNote}.${prof ? ` Compared with your usual range (${prof.n} finished ${mode === "story" ? "stories" : "essays"}).` : " No profile found, so no comparison."}`, "");
 out.push("## Hard rules", `- Em dashes: ${em}${em ? " FAIL" : " ok"}`, `- Semicolons: ${semi}${semi ? " FAIL" : " ok"}`, "");
 out.push("## Numbers outside your usual range");
 const NUM = [["avgSentence", "Average sentence (words)"], ["variation", "Sentence variation"], ["lumpiness", "Lumpiness"], ["pacing", "Pacing exponent"], ["grade", "Reading grade"], ["contractPer100", "Contractions per 100 words"], ["shortPct", "Short sentences %"], ["paraCV", "Paragraph variation"], ["adverbPct", "Adverbs %"], ["passivePct", "Passive %"], ["specificsPer100", "Specifics per 100 words"], ["mattr", "Vocabulary diversity"]];
