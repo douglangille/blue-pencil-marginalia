@@ -44,6 +44,14 @@ const PHRASE_RULES = {
     /\b(?:silence|darkness|shadows?|night|time|fear|hope|grief|wind|morning|city|house|room|air|memory|memories|truth|doubt|sorrow|anger|despair) (?:whispered|watched|stirred|danced|crept|swallowed|embraced|wrapped|spoke|screamed|breathed|sang|waited|beckoned|loomed|hung heavy|pressed in|closed in|settled over)\b/gi,
     /\ba weight (?:lifted|settled|pressed)\b|\bthe walls came down\b/gi,
   ],
+  "sl-crutch": [ // manufactured urgency, and the reflex narrated as cognition
+    /\b(?:suddenly|instantly|all at once|out of nowhere)\b/gi,
+    new RegExp("\\b(?:before|until) (?:(?:his|her|my|their|our|the) (?:mind|brain|thoughts?)|(?:he|she|I|they|we) (?:could|had|even)) (?:caught up|process(?:ed)?|think|realized|registered)\\b", "gi"),
+  ],
+  "sl-attrib": [ // vague attribution
+    /\b(?:experts|studies|research|critics|scientists|analysts|many people|some people) (?:say|says|show|shows|suggest|suggests|believe|claim|agree|argue)\b/gi,
+    /\b(?:it is|it's) (?:widely|commonly|generally) (?:believed|known|accepted|thought)\b/gi,
+  ],
   "sl-hedge": [
     /\b(?:perhaps|maybe|might|arguably|appeared|seems?|seemed|i would argue)\b/gi,
   ],

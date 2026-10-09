@@ -49,6 +49,14 @@ const PHRASE_RULES = {
     /\b(?:silence|darkness|shadows?|night|time|fear|hope|grief|wind|morning|city|house|room|air|memory|memories|truth|doubt|sorrow|anger|despair) (?:whispered|watched|stirred|danced|crept|swallowed|embraced|wrapped|spoke|screamed|breathed|sang|waited|beckoned|loomed|hung heavy|pressed in|closed in|settled over)\b/gi,
     /\ba weight (?:lifted|settled|pressed)\b|\bthe walls came down\b/gi,
   ],
+  "sl-crutch": [ // manufactured urgency, and the reflex narrated as cognition
+    /\b(?:suddenly|instantly|all at once|out of nowhere)\b/gi,
+    new RegExp("\\b(?:before|until) (?:(?:his|her|my|their|our|the) (?:mind|brain|thoughts?)|(?:he|she|I|they|we) (?:could|had|even)) (?:caught up|process(?:ed)?|think|realized|registered)\\b", "gi"),
+  ],
+  "sl-attrib": [ // vague attribution
+    /\b(?:experts|studies|research|critics|scientists|analysts|many people|some people) (?:say|says|show|shows|suggest|suggests|believe|claim|agree|argue)\b/gi,
+    /\b(?:it is|it's) (?:widely|commonly|generally) (?:believed|known|accepted|thought)\b/gi,
+  ],
   "sl-hedge": [
     /\b(?:perhaps|maybe|might|arguably|appeared|seems?|seemed|i would argue)\b/gi,
   ],
@@ -683,6 +691,8 @@ const ITEMS = [
     ["sl-passive", "Passive voice (was eaten)", "#c2544d", "The doer is missing or pushed to the back."],
     ["sl-nom", "Abstract nouns (-tion, -ment, -ness)", "#d98cc4", "\"The implementation of\" where \"implement\" would do."],
     ["sl-vnoun", "Vague nouns (thing, aspect, factor)", "#e0913a", "Nouns that point at nothing in particular."],
+    ["sl-crutch", "Crutch words (suddenly, before the mind caught up)", "#c2544d", "Urgency announced by an adverb, or a reflex narrated as thinking, instead of rendered as action."],
+    ["sl-attrib", "Vague attribution (experts say, studies show)", "#9aa0a6", "A claim with no one standing behind it."],
     ["sl-hedge", "Hedges (perhaps, might, seems)", "#e0913a", "Words that back away from the claim."],
     ["sl-repeat", "Doubled words (the the)", "#4caf7d", "The same word twice in a row, usually a typo."],
     ["sl-radar", "Repeated word nearby (within 25 words)", "#4caf7d", "A content word recurring close by. Topic words are fine, accidents aren't."],

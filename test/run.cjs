@@ -46,6 +46,8 @@ test("wrap-up tail, but not 'something' or 'morning'", () => {
   has("He closed the door, reminding himself that nothing would change.", "sl-tail", "reminding");
   hasNot("We walked to the market, something I never expected to enjoy at all.", "sl-tail");
 });
+test("crutch words and the mind-caught-up frame", () => { has("Suddenly the door opened.", "sl-crutch", "Suddenly"); has("She ducked before her mind caught up.", "sl-crutch", "before her mind caught up"); hasNot("The door opened slowly.", "sl-crutch"); });
+test("vague attribution", () => { has("Experts say this works.", "sl-attrib", "Experts say"); has("Studies show it helps.", "sl-attrib", "Studies show"); hasNot("My mother says hello.", "sl-attrib"); });
 test("copula dodge", () => { has("They act as a team.", "sl-copdodge", "act as"); has("The hotel boasts a pool.", "sl-copdodge", "boasts"); });
 test("triplet", () => has("The room was cold, quiet, and empty.", "sl-triplet", "cold, quiet, and empty"));
 test("staccato run", () => assert(hits("He ran. He fell. He cried. Then he got up and walked home slowly.", "sl-stacc").length >= 3));
