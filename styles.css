@@ -149,6 +149,11 @@ ol.sl-help, ul.sl-help { padding-left: 1.3em; }
 .sl-panel .setting-item-control input[type="color"] { flex: 0 0 auto; width: 2.4em; }
 @container (max-width: 300px) {
   .sl-d2 { display: none; }
+  /* Obsidian keeps toggle rows side by side, which squeezes the name to a sliver. Stack them. */
+  .sl-panel .setting-item.mod-toggle { flex-direction: column; align-items: stretch; }
+  .sl-panel .setting-item.mod-toggle .setting-item-info { width: 100%; margin-inline-end: 0; }
+  .sl-panel .setting-item.mod-toggle .setting-item-control { width: 100%; justify-content: flex-start; }
+  .sl-panel .setting-item-name, .sl-panel .setting-item-description { overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
   .sl-panel .sl-tab { padding: 3px 5px; font-size: var(--font-ui-smaller); }
   .sl-folder .setting-item-control { flex-direction: column; align-items: stretch; width: 100%; }
   .sl-folder .setting-item-control input[type="text"] { width: 100%; }
