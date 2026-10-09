@@ -64,6 +64,7 @@
 .sl-hidden { display: none !important; }
 .sl-stats { width: 100%; border-collapse: collapse; font-size: var(--font-ui-small); }
 .sl-stats td { padding: 1px 4px 1px 0; }
+.sl-stats .sl-k { overflow-wrap: anywhere; }
 .sl-k { color: var(--text-muted); }
 .sl-cap { margin-top: 0.9em; color: var(--text-muted); font-size: var(--font-ui-smaller); }
 .sl-strip { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1px; row-gap: 6px; margin-top: 4px; }
@@ -88,6 +89,7 @@
 .sl-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
 .sl-mode { display: flex; gap: 0; margin-bottom: 8px; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-m); overflow: hidden; }
 .sl-usual { color: var(--text-faint); font-size: var(--font-ui-smaller); white-space: nowrap; padding-left: 6px; }
+.sl-usual .sl-mark { margin-left: 4px; }
 .sl-usual.sl-hi { color: #e0913a; }
 .sl-usual.sl-lo { color: #4f9dde; }
 .sl-stats td:nth-child(2) { text-align: right; }
@@ -126,3 +128,19 @@ ol.sl-help, ul.sl-help { padding-left: 1.3em; }
 .sl-help li { margin-bottom: 0.35em; }
 .sl-head td { color: var(--text-faint); font-size: var(--font-ui-smaller); text-align: right; }
 .sl-maptitle { font-size: var(--font-ui-medium); font-weight: var(--font-semibold); color: var(--text-normal); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Narrow sidebar. The panel is its own container, so this follows the sidebar's width. */
+.sl-panel { container-type: inline-size; }
+@container (max-width: 340px) {
+  /* the arrow says whether a number is off your usual; the range moves to hover text */
+  .sl-usual .sl-rng { display: none; }
+  .sl-stats tr.sl-head { display: none; }
+  .sl-stats td.sl-usual { padding-left: 2px; min-width: 1.2em; }
+}
+@container (max-width: 230px) {
+  /* very narrow: label above, value and arrow below */
+  .sl-stats { display: block; }
+  .sl-stats tr { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--background-modifier-border); }
+  .sl-stats td.sl-k { flex: 1 0 100%; }
+  .sl-stats td.sl-v { text-align: left; }
+}

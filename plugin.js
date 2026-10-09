@@ -903,9 +903,14 @@ class LensView extends ItemView {
         const tr = t.createEl("tr");
         const th = tr.createEl("td", { text: k, cls: "sl-k" });
         if (tip) th.title = tip;
-        tr.createEl("td", { text: v });
+        tr.createEl("td", { text: v, cls: "sl-v" });
         const u = key && enough ? this.usual(key, raw, d) : null;
-        tr.createEl("td", { text: u ? u.txt : "", cls: "sl-usual" + (u ? " sl-" + u.st : "") });
+        const uc = tr.createEl("td", { cls: "sl-usual" + (u ? " sl-" + u.st : "") });
+        if (u) {
+          uc.createSpan({ text: u.rng, cls: "sl-rng" });
+          uc.createSpan({ text: u.mark, cls: "sl-mark" });
+          tr.title = "Your usual: " + u.rng; // the range hides at narrow widths, so keep it in hover text
+        }
       }
     }
     const jump = (from) => this.plugin.jump(md, from);
@@ -947,7 +952,8 @@ class LensView extends ItemView {
     const p = this.plugin.profiles[this.plugin.mode()], m = p && p.metrics[key];
     if (!m || !Number.isFinite(v)) return null;
     const st = v < m.p10 ? "lo" : v > m.p90 ? "hi" : "ok";
-    return { st, txt: `${fmt(m.p10, d)}\u2013${fmt(m.p90, d)}` + (st === "hi" ? " \u25b2" : st === "lo" ? " \u25bc" : "") };
+    const rng = `${fmt(m.p10, d)}\u2013${fmt(m.p90, d)}`, mark = st === "hi" ? "\u25b2" : st === "lo" ? "\u25bc" : "";
+    return { st, rng, mark, txt: rng + (mark ? " " + mark : "") };
   }
   counts(a) {
     for (const [cls, st] of this.rows) {
