@@ -12,7 +12,7 @@ Module._load = function (r, ...a) {
 const src = fs.readFileSync(path.join(__dirname, "..", "main.js"), "utf8") + "\n;module.exports._nlp = nlpMod.exports.default || nlpMod.exports;";
 const m = { exports: {} };
 new Function("require", "module", "exports", src)(require, m, m.exports);
-const { _analyzeDoc, _classify, _describeAt, _fitColor, _contrastOf, _nlp } = m.exports;
+const { _analyzeDoc, _classify, _describeAt, _fitColor, _contrastOf, _lumpiness, _dfaExponent, _nlp } = m.exports;
 
 const an = (t) => _analyzeDoc(_nlp, t);
 const hits = (t, cls) => an(t).hits.filter((h) => h.cls === cls).map((h) => t.slice(h.from, h.to));
@@ -88,6 +88,25 @@ test("story vs essay detection, with hand-made profiles", () => {
   const twice = (t) => t + "\n\n" + t; // detection wants 150+ words
   assert.strictEqual(_classify(an(twice(story)), profiles).label, "story");
   assert.strictEqual(_classify(an(twice(essay)), profiles).label, "essay");
+});
+
+test("pacing: lumpiness is low for evenly paced series and high for bursty ones", () => {
+  const even = Array.from({ length: 60 }, (_, i) => 8 + (i % 3));
+  const bursty = [...Array(10).fill(10), ...[2, 30, 5, 28, 3, 25, 6, 31, 4, 27], ...Array(10).fill(9), ...[1, 40, 2, 35, 3, 38, 2, 33, 4, 36], ...Array(10).fill(11), ...[3, 29, 5, 26, 2, 34, 6, 30, 3, 28]];
+  assert(_lumpiness(even) < 0.2, "even series: " + _lumpiness(even));
+  assert(_lumpiness(bursty) > 0.5, "bursty series: " + _lumpiness(bursty));
+  assert.strictEqual(_lumpiness([5, 6, 7]), null);
+});
+test("pacing: DFA exponent separates alternating, random and clustered series", () => {
+  let seed = 7; const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+  const alt = Array.from({ length: 120 }, (_, i) => (i % 2 ? 24 : 6));
+  const random = Array.from({ length: 400 }, () => 4 + Math.floor(rnd() * 20));
+  const clustered = []; for (let b = 0; b < 12; b++) { const long = b % 2 === 0; for (let i = 0; i < 25; i++) clustered.push(long ? 18 + Math.floor(rnd() * 6) : 4 + Math.floor(rnd() * 4)); }
+  const a = _dfaExponent(alt), r = _dfaExponent(random), c = _dfaExponent(clustered);
+  assert(a < 0.35, "alternating should be anti-persistent, got " + a);
+  assert(r > 0.35 && r < 0.65, "random should sit near 0.5, got " + r);
+  assert(c > 0.7, "clustered should be persistent, got " + c);
+  assert.strictEqual(_dfaExponent([1, 2, 3]), null);
 });
 
 console.log(`${passed} passed, ${failed} failed`);

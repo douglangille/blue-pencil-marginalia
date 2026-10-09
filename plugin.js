@@ -258,6 +258,49 @@ function analyzeBlock(nlp, text, prose) {
 
 // ---------- whole-note analysis ----------
 
+// ---------- pacing: how unevenly the prose is paced, from the series of sentence lengths ----------
+const meanOf = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+const sdOf = (a) => { const m = meanOf(a); return Math.sqrt(meanOf(a.map((x) => (x - m) ** 2))); };
+
+// Lumpiness as tsfeatures defines it (variance of the variances over tiled windows), made scale-free
+// by dividing by the mean window variance. Even pacing gives a low value, bursts of wildness a high one.
+function lumpiness(x, win = 10) {
+  const v = [];
+  for (let i = 0; i + win <= x.length; i += win) v.push(sdOf(x.slice(i, i + win)) ** 2);
+  if (v.length < 3 || !meanOf(v)) return null;
+  return sdOf(v) / meanOf(v);
+}
+
+// Detrended fluctuation analysis exponent of the series (the Hurst-style measure used on sentence
+// lengths in literary texts). Near 0.5 is random pacing, above 0.5 is persistent (long stretches stay
+// long or short), below 0.5 is anti-persistent (a steady long/short alternation).
+function dfaExponent(x) {
+  const N = x.length;
+  if (N < 40) return null;
+  const mu = meanOf(x);
+  const y = [];
+  let c = 0;
+  for (const v of x) { c += v - mu; y.push(c); }
+  const pts = [];
+  for (let n = 4; n <= Math.floor(N / 4); n = Math.ceil(n * 1.35)) {
+    const k = Math.floor(N / n);
+    let F = 0;
+    for (let b = 0; b < k; b++) {
+      const seg = y.slice(b * n, (b + 1) * n), tm = (n - 1) / 2, sm = meanOf(seg);
+      let num = 0, den = 0;
+      for (let i = 0; i < n; i++) { num += (i - tm) * (seg[i] - sm); den += (i - tm) ** 2; }
+      const sl = num / den, ic = sm - sl * tm;
+      for (let i = 0; i < n; i++) F += (seg[i] - (sl * i + ic)) ** 2;
+    }
+    if (F > 0) pts.push([Math.log(n), Math.log(Math.sqrt(F / (k * n)))]);
+  }
+  if (pts.length < 4) return null;
+  const xm = meanOf(pts.map((p) => p[0])), ym = meanOf(pts.map((p) => p[1]));
+  let nu = 0, de = 0;
+  for (const [a, b] of pts) { nu += (a - xm) * (b - ym); de += (a - xm) ** 2; }
+  return nu / de;
+}
+
 // Moving-average type-token ratio: vocabulary diversity that doesn't depend on length.
 function mattr(ws, win = 50) {
   if (!ws.length) return 0;
@@ -437,6 +480,8 @@ function analyzeDoc(nlp, text) {
     pastPct: words ? (100 * past) / words : 0,
     thirdPct: words ? (100 * third) / words : 0,
     secondPct: words ? (100 * second) / words : 0,
+    lumpiness: lumpiness(lens),
+    pacing: dfaExponent(lens),
     mattr: mattr(allLws),
     complexPct: words ? (100 * complex) / words : 0,
     fog: sents.length && words ? 0.4 * (words / sents.length + (100 * complex) / words) : 0,
@@ -495,7 +540,7 @@ const INK = { dark: "#e6e8eb", light: "#1f2328" };
 
 const refresh = StateEffect.define();
 const VIEW_TYPE = "syntax-lens-panel"; // old name kept so a saved layout still finds the panel
-const RULES_VERSION = 3; // bump when a rule change shifts the numbers; profiles built under an older one show a rebuild note
+const RULES_VERSION = 4; // bump when a rule change shifts the numbers; profiles built under an older one show a rebuild note
 const MAP_TYPE = "marginalia-map";
 const MAP_COLS = 90; // characters per minimap row
 // [class, label, default color, hint]
@@ -599,7 +644,7 @@ const STORY_ONLY = ["sl-dialogue", "sl-tagfancy", "sl-tagadv", "sl-tagrun", "sl-
 const ESSAY_ONLY = ["sl-throat", "sl-road", "sl-concede", "sl-nom", "sl-uncontr", "sl-jump"];
 const MODE_HIDES = { story: ESSAY_ONLY, essay: STORY_ONLY };
 const DEFAULT_FOLDERS = { story: "", essay: "" }; // the user points these at their own finished work in Setup
-const PROFILE_STATS = ["avgSentence", "variation", "grade", "adverbPct", "passivePct", "dialogueParaPct", "dialogueWordPct", "longestEven", "pastPct", "thirdPct", "secondPct", "mattr", "fog", "complexPct", "adjPct", "shortPct", "paraCV", "longestPara", "headingsPer1000", "listPer1000", "contractPer100", "specificsPer100", "openClose"];
+const PROFILE_STATS = ["avgSentence", "variation", "lumpiness", "pacing", "grade", "adverbPct", "passivePct", "dialogueParaPct", "dialogueWordPct", "longestEven", "pastPct", "thirdPct", "secondPct", "mattr", "fog", "complexPct", "adjPct", "shortPct", "paraCV", "longestPara", "headingsPer1000", "listPer1000", "contractPer100", "specificsPer100", "openClose"];
 
 // Essay or story? Naive Bayes over six numbers, using the means and spreads in the two profiles.
 const DETECT = ["pastPct", "thirdPct", "secondPct", "dialogueParaPct", "grade", "rate:sl-filter"];
@@ -768,6 +813,8 @@ class LensView extends ItemView {
     p("Auto reads the note (past tense, he/she, dialogue, reading level) and picks. Click Essay or Story to override it. Some checks fit only one: dialogue and filter words are for stories, roadmap phrases and abstract nouns are for essays. A true story told as narrative counts as a Story.");
     h("Reading the Stats tab");
     p("The right-hand column is your usual range, the middle 80% of your own samples. \u25b2 means above it and \u25bc below. It compares you with you, not with a rulebook. Notes under about 200 words are too short to compare.");
+    h("Pacing");
+    p("Evenly paced prose, every stretch alike, tends to read as machine-made, and clumpy, uneven prose as human. The Pacing group measures that three ways: how much sentence length varies, how much that variation itself varies from stretch to stretch (lumpiness), and whether long and short sentences cluster or alternate (pacing memory). \"Pacing vs your usual\" averages them against your own profile. It is a weak signal on its own: it describes how a piece moves, not who wrote it.");
     h("The map");
     p("Each small bar is a word, and colored bars are flagged. The chips list what is flagged in this note: click one to see only that category, click again to go back. The shaded box is where you are scrolled. Part-of-speech colors are left off the map because they would cover everything.");
     p("The notebook icon in the ribbon shows or hides this panel and the map together.");
@@ -801,19 +848,25 @@ class LensView extends ItemView {
     m.empty();
     if (!a) { m.createEl("p", { text: "Open a note to see its numbers.", cls: "sl-status" }); this.counts(null); return; }
     const s = a.stats;
+    const paceLabel = this.paceLabel(s);
     const groups = [
       ["Size", [
         ["Words", fmt(s.words)], ["Sentences", fmt(s.sentences)], ["Paragraphs", fmt(s.paragraphs)],
         ["Reading time", fmt(s.minutes, 1) + " min"],
         ["Longest paragraph", fmt(s.longestPara) + " words", null, "longestPara", s.longestPara, 0],
-        ["Paragraph variation", fmt(s.paraCV, 2), "Spread of paragraph lengths. Low means every paragraph is about the same size.", "paraCV", s.paraCV, 2],
       ]],
       ["Sentences", [
         ["Avg sentence", fmt(s.avgSentence, 1) + " words", null, "avgSentence", s.avgSentence, 1],
-        ["Length variation", fmt(s.variation, 2), "Standard deviation divided by mean sentence length. Low means even, monotone sentences.", "variation", s.variation, 2],
         ["Short sentences", fmt(s.shortPct, 0) + "% are 5 words or fewer", null, "shortPct", s.shortPct, 0],
         ["Longest even run", s.longestEven ? s.longestEven + " sentences" : "none", null, "longestEven", s.longestEven, 0],
         ["Long/short swings", String(s.zigzags) + (s.zigzags === 1 ? " run" : " runs")],
+      ]],
+      ["Pacing", [
+        ["Pacing vs your usual", paceLabel, "Average of how far the four numbers below sit from your usual. Below zero means smoother and more regular than you normally write, above zero lumpier. It describes pacing, not who wrote it.", null],
+        ["Length variation", fmt(s.variation, 2), "Standard deviation divided by mean sentence length. Low means even, monotone sentences.", "variation", s.variation, 2],
+        ["Lumpiness", s.lumpiness == null ? "too short" : fmt(s.lumpiness, 2), "How much the variation itself varies from one stretch of ten sentences to the next. Low means every stretch is paced alike; high means calm stretches and wild ones.", "lumpiness", s.lumpiness, 2],
+        ["Pacing memory", s.pacing == null ? "40+ sentences" : fmt(s.pacing, 2), "Detrended fluctuation exponent of the sentence lengths. About 0.5 is random, above 0.5 means long and short stretches cluster, below 0.5 means a steady alternation.", "pacing", s.pacing, 2],
+        ["Paragraph variation", fmt(s.paraCV, 2), "Spread of paragraph lengths. Low means every paragraph is about the same size.", "paraCV", s.paraCV, 2],
       ]],
       ["Readability", [
         ["Reading grade", fmt(s.grade, 1), "Flesch-Kincaid, with an approximate syllable count.", "grade", s.grade, 1],
@@ -879,9 +932,20 @@ class LensView extends ItemView {
     }
     this.counts(a);
   }
+  // Average z-score of the four pacing numbers against the usual profile, as a plain label.
+  paceLabel(s) {
+    const p = this.plugin.profiles[this.plugin.mode()];
+    if (!p || s.words < 200) return "no profile yet";
+    const zs = [["variation", s.variation], ["lumpiness", s.lumpiness], ["pacing", s.pacing], ["paraCV", s.paraCV]]
+      .map(([k, v]) => { const m = p.metrics[k]; return m && m.sd > 0 && Number.isFinite(v) ? (v - m.mean) / m.sd : null; })
+      .filter((z) => z !== null);
+    if (zs.length < 2) return "too short";
+    const z = meanOf(zs);
+    return (z > 0 ? "+" : "") + z.toFixed(1) + (z < -0.5 ? " smoother" : z > 0.5 ? " lumpier" : " typical");
+  }
   usual(key, v, d) {
     const p = this.plugin.profiles[this.plugin.mode()], m = p && p.metrics[key];
-    if (!m) return null;
+    if (!m || !Number.isFinite(v)) return null;
     const st = v < m.p10 ? "lo" : v > m.p90 ? "hi" : "ok";
     return { st, txt: `${fmt(m.p10, d)}\u2013${fmt(m.p90, d)}` + (st === "hi" ? " \u25b2" : st === "lo" ? " \u25bc" : "") };
   }
@@ -1218,7 +1282,7 @@ class SyntaxLens extends Plugin {
     } finally { note.hide(); }
     if (rows.length < 3) { new Notice("Blue Pencil: need at least 3 notes of 300+ words in " + folder + " (found " + rows.length + ")."); return; }
     const metrics = {};
-    for (const k of PROFILE_STATS) metrics[k] = quant(rows.map((a) => a.stats[k]));
+    for (const k of PROFILE_STATS) metrics[k] = quant(rows.map((a) => a.stats[k]).filter((v) => Number.isFinite(v)));
     for (const c of FLAG_CLASSES) metrics["rate:" + c] = quant(rows.map((a) => ((a.counts[c] || 0) * 1000) / a.stats.words));
     const prof = { kind, folder, built: new Date().toISOString(), rules: RULES_VERSION, n: rows.length, metrics };
     await this.app.vault.adapter.write(this.manifest.dir + "/profile-" + kind + ".json", JSON.stringify(prof, null, 1));
@@ -1318,4 +1382,6 @@ module.exports = SyntaxLens;
 module.exports._analyzeDoc = analyzeDoc;
 module.exports._describeAt = describeAt;
 module.exports._classify = classify;
+module.exports._lumpiness = lumpiness;
+module.exports._dfaExponent = dfaExponent;
 module.exports._fitColor = fitColor; module.exports._contrastOf = contrastOf;
